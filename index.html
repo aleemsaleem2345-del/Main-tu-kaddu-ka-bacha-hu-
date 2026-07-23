@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💙 Meri Jaan Kaddu...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Playfair Display', serif;
+            overflow: hidden;
+        }
+
+        .romantic-font {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .bg-gradient {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            animation: gradientShift 12s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2.2rem;
+            color: #f43f5e;
+            text-shadow: 0 0 15px #f43f5e;
+            animation: floatHeart 9s linear infinite;
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0.9; }
+            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        }
+
+        .glow-button {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 40px -5px rgb(59 130 246);
+        }
+
+        .glow-button:hover {
+            transform: scale(1.08) translateY(-6px);
+            box-shadow: 0 0 70px 10px rgb(59 130 246);
+        }
+
+        .balloon {
+            font-size: 130px;
+            cursor: pointer;
+            transition: all 0.4s;
+            animation: floatBalloon 5s ease-in-out infinite;
+        }
+
+        @keyframes floatBalloon {
+            0%, 100% { transform: translateY(0) rotate(-10deg); }
+            50% { transform: translateY(-50px) rotate(10deg); }
+        }
+    </style>
+</head>
+<body class="bg-gradient min-h-screen text-white flex items-center justify-center relative">
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="absolute inset-0 flex flex-col items-center justify-center z-50">
+        <div id="hearts-container" class="absolute inset-0 pointer-events-none"></div>
+        <div id="stars-container" class="absolute inset-0 pointer-events-none"></div>
+
+        <div class="text-center max-w-2xl px-6 z-10">
+            <h1 class="text-6xl md:text-7xl romantic-font mb-8 leading-tight text-white drop-shadow-lg">
+                💙 Hello Meri Jaan Kaddu... 🥹❤️
+            </h1>
+            
+            <p class="text-3xl md:text-4xl romantic-font mb-6">Ye sab kuch sirf tere liye hai...</p>
+            
+            <div class="text-2xl md:text-3xl romantic-font max-w-md mx-auto mb-16 text-blue-100">
+                Har click ke saath tujhe mera pyaar milega ❤️
+            </div>
+
+            <button onclick="startJourney()" 
+                    class="glow-button mt-8 px-16 py-8 rounded-3xl text-4xl font-bold bg-white text-blue-600 border-4 border-white flex items-center gap-4 mx-auto shadow-2xl">
+                <i class="fa-solid fa-heart"></i>
+                Chalo Shuru Karein...
+                <i class="fa-solid fa-heart"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Page 2 -->
+    <div id="page-2" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-black/80 z-40">
+        <div class="text-center max-w-lg px-6">
+            <h2 class="text-6xl romantic-font mb-12 leading-tight">
+                🥹<br>
+                Kaddu...<br>
+                <span class="text-5xl">Main tu Kaddu ka bacha hoon ❤️</span>
+            </h2>
+
+            <div class="flex justify-center gap-16 mb-12" id="balloons"></div>
+
+            <p class="text-2xl romantic-font text-blue-200">Balloon pop kar aur dekh kitna pyaar karta hoon main tujhe...</p>
+        </div>
+    </div>
+
+    <!-- Audio -->
+    <audio id="bg-music" loop>
+        <source src="https://assets.mixkit.co/music/preview/2965/2965-preview.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            for (let i = 0; i < 40; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = '💙';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 8 + 8) + 's';
+                heart.style.animationDelay = '-' + Math.random() * 15 + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        function createBalloons() {
+            const container = document.getElementById('balloons');
+            const emojis = ['❤️', '💙', '💖', '💘'];
+            for (let i = 0; i < 4; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.textContent = emojis[i];
+                balloon.onclick = () => popBalloon(balloon);
+                container.appendChild(balloon);
+            }
+        }
+
+        function popBalloon(balloon) {
+            balloon.style.transform = 'scale(2.5) rotate(40deg)';
+            balloon.style.opacity = '0';
+            createConfetti();
+            
+            if (document.querySelectorAll('.balloon').length <= 1) {
+                setTimeout(showFinalMessage, 600);
+            }
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 90; i++) {
+                const c = document.createElement('div');
+                c.style.position = 'fixed';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.top = '-20px';
+                c.textContent = ['❤️','💙','💜','✨'][Math.floor(Math.random()*4)];
+                c.style.fontSize = '1.8rem';
+                document.body.appendChild(c);
+                
+                c.animate([
+                    { transform: 'translateY(0)', opacity: 1 },
+                    { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random()*1000}deg)`, opacity: 0 }
+                ], { duration: Math.random() * 3000 + 3500 });
+                
+                setTimeout(() => c.remove(), 6000);
+            }
+        }
+
+        function showFinalMessage() {
+            const final = document.createElement('div');
+            final.className = 'fixed inset-0 bg-black/95 flex items-center justify-center z-50';
+            final.innerHTML = `
+                <div class="text-center px-8">
+                    <div class="text-8xl mb-6">💙🥹</div>
+                    <h1 class="text-6xl romantic-font mb-6">Main tu Kaddu ka bacha hoon...</h1>
+                    <p class="text-4xl romantic-font text-pink-300 mb-12">Aur tujhe bohot zyada pyaar karta hoon meri jaan ❤️</p>
+                    <button onclick="location.reload()" class="px-14 py-7 rounded-3xl text-3xl bg-white text-blue-600 font-bold glow-button">
+                        Phir Se Dekhein?
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(final);
+        }
+
+        function startJourney() {
+            document.getElementById('welcome-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('welcome-screen').classList.add('hidden');
+                document.getElementById('page-2').classList.remove('hidden');
+                document.getElementById('page-2').classList.add('flex');
+                
+                const music = document.getElementById('bg-music');
+                music.volume = 0.18;
+                music.play().catch(() => {});
+                
+                createBalloons();
+            }, 800);
+        }
+
+        window.onload = () => {
+            createHearts();
+        };
+    </script>
+</body>
+</html>
